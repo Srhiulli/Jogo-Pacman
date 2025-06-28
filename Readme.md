@@ -57,7 +57,7 @@ pacman-js/
 └── README.md
 ```
 
-## 🧠 Lógica dos Fantasmas será implementada
+## 🧠 Lógica dos Fantasmas (será implementada)
 
 Os fantasmas implementam diferentes comportamentos:
 - **Blinky** (vermelho): Persegue agressivamente
@@ -69,8 +69,6 @@ Os fantasmas implementam diferentes comportamentos:
 
 - [ ] Adicionar sons de jogo
 - [ ] Implementar níveis progressivos
-- [ ] Adicionar modo 2 jogadores
-- [ ] Criar sistema de highscore
 - [ ] Lógica dos fantasmas
 
 ## 🤝 Como Contribuir
