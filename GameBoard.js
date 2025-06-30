@@ -65,6 +65,26 @@ class GameBoard {
       character.setNewPos(nextMovePos, direction);
     }
   }
+  moveGhost(ghost, pacman) {
+    if (ghost.shouldMove()) {
+      const dto = {
+        objectExist: this.objectExist.bind(this),
+        pacman: pacman
+      }
+      const { nextMovePos, direction } = ghost.getNextMove(dto);     
+      const { classesToRemove, classesToAdd } = ghost.makeMove();
+
+      if (ghost.rotation && nextMovePos !== ghost.pos) {
+        this.rotateDiv(nextMovePos, ghost.dir.rotation);
+        this.rotateDiv(ghost.pos, 0);
+      }
+
+      this.removeObject(ghost.pos, classesToRemove);
+      this.addObject(nextMovePos, classesToAdd);
+
+      ghost.setNewPos(nextMovePos, direction);
+    }
+  }
 
   static createGameBoard(DOMGrid, level) {
     const board = new this(DOMGrid);

@@ -1,11 +1,16 @@
 import { DIRECTIONS, OBJECT_TYPE } from './setup';
-import { randomMovement } from './ghostMovements';
+import { blinkyBehavior, pinkyBehavior, inkyBehavior, clydeBehavior } from './ghostBehaviors';
+
 
 
 class Ghost {
-  constructor(speed = 5, startPos, movementStrategy, name) {
+  constructor(
+    speed = 5,
+    startPos,
+    behavior,
+    name
+  ) {
     this.name = name;
-    this.moveStrategy = movementStrategy;
     this.startPos = startPos;
     this.pos = startPos;
     this.dir = DIRECTIONS.ArrowRight;
@@ -13,6 +18,7 @@ class Ghost {
     this.timer = 0;
     this.isScared = false;
     this.rotation = false;
+    this.behavior = behavior;
   }
 
   shouldMove() {
@@ -23,12 +29,12 @@ class Ghost {
     this.timer++;
   }
 
-  getNextMove(objectExist) {
-    const { nextMovePos, direction } = this.moveStrategy(
+  getNextMove(dto) {
+    const { nextMovePos, direction } = this.behavior(
       this.pos,
       this.dir,
-      objectExist
-    );
+      dto
+    )
     return { nextMovePos, direction };
   }
 
@@ -40,6 +46,7 @@ class Ghost {
 
     return { classesToRemove, classesToAdd };
   }
+
 
   setNewPos(nextMovePos, direction) {
     this.pos = nextMovePos;
