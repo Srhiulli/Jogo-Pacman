@@ -1,6 +1,6 @@
 import { GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST } from './setup';
 
-class GameBoard {
+export class GameBoard {
   constructor(DOMGrid) {
     this.dotCount = 0;
     this.grid = [];
@@ -65,11 +65,13 @@ class GameBoard {
       character.setNewPos(nextMovePos, direction);
     }
   }
-  moveGhost(ghost, pacman) {
+
+  moveGhost(ghost, pacman, ghostContext) {
     if (ghost.shouldMove()) {
       const dto = {
         objectExist: this.objectExist.bind(this),
-        pacman: pacman
+        pacman: pacman,
+        ghostContext: ghostContext,
       }
       const { nextMovePos, direction } = ghost.getNextMove(dto);     
       const { classesToRemove, classesToAdd } = ghost.makeMove();
@@ -93,4 +95,18 @@ class GameBoard {
   }
 }
 
-export default GameBoard;
+export class GameContext { 
+  constructor(gameBoard) {
+    this.gameBoard = gameBoard;
+    this.ghosts = [];
+  }
+
+  updateContext(ghosts) {
+    this.ghosts = ghosts;
+  }
+
+  static createGameContext(gameBoard, ghost) {
+    const context = new GameContext(gameBoard);
+    return context
+  }
+}

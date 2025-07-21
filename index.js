@@ -1,5 +1,5 @@
 import { LEVEL, OBJECT_TYPE } from './setup';
-import GameBoard from './GameBoard';
+import  {GameBoard , GameContext} from './GameBoard';
 import Pacman from './Pacman';
 import Ghost from './Ghosts';
 import { blinkyBehavior, pinkyBehavior, inkyBehavior, clydeBehavior } from './ghostBehaviors';
@@ -12,6 +12,7 @@ const startButton = document.querySelector('#start-button');
 const POWER_PILL_TIME = 10000; // ms
 const GLOBAL_SPEED = 80; // ms
 const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
+const gameContext = GameContext.createGameContext(gameBoard);
 let score = 0;
 let timer = null;
 let gameWin = false;
@@ -53,10 +54,14 @@ function checkCollision(pacman, ghosts) {
 }
 
 function gameLoop(pacman, ghosts) {
+   gameContext.updateContext(ghosts);
+
   gameBoard.moveCharacter(pacman);
   checkCollision(pacman, ghosts);
 
-  ghosts.forEach(ghost => { gameBoard.moveGhost(ghost, pacman) });
+  ghosts.forEach(ghost => {
+    gameBoard.moveGhost(ghost, pacman, gameContext);
+  });
   checkCollision(pacman, ghosts);
 
   if (gameBoard.objectExist(pacman.pos, OBJECT_TYPE.DOT)) {
@@ -108,7 +113,7 @@ function startGame() {
 const ghosts = [
   new Ghost(5, 188, blinkyBehavior, OBJECT_TYPE.BLINKY),
   new Ghost(4, 209, pinkyBehavior, OBJECT_TYPE.PINKY),
-  // new Ghost(3, 230, inkyBehavior(pacman.pos, blinkyPos), OBJECT_TYPE.INKY),
+  new Ghost(3, 230, inkyBehavior, OBJECT_TYPE.INKY),
   new Ghost(2, 251, clydeBehavior, OBJECT_TYPE.CLYDE)
 ];
 
