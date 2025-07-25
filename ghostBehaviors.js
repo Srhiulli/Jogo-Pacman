@@ -97,18 +97,13 @@ export function randomMovement(position, direction, dto) {
 export const blinkyBehavior = (pos, dir, dto) => {
   const pacDir = dto.pacman.dir;
   const pacPos = dto.pacman.pos;
-  let nextMovePos = pos;
+  const isPacOnPill = dto.pacman.powerPill;
 
-  if (
-    !dto.objectExist(nextMovePos, OBJECT_TYPE.WALL) &&
-    !dto.objectExist(nextMovePos, OBJECT_TYPE.GHOST)
-  ) {
-    return { nextMovePos, direction: pacDir };
-  }
+  if (isPacOnPill) return randomMovement(pos, dir, dto);
 
-  const path = findShortestPath(pos, pacPos, dto);
-  if (path && path.length > 0) {
-    const moveTo = path[0];
+  const getPacman = findShortestPath(pos, pacPos, dto);
+  if (getPacman && getPacman.length > 0) {
+    const moveTo = getPacman[0];
     const newDir = Object.values(DIRECTIONS).find(d => pos + d.movement === moveTo);
     return { nextMovePos: moveTo, direction: newDir || dir };
   }
@@ -126,22 +121,16 @@ export const blinkyBehavior = (pos, dir, dto) => {
 export const pinkyBehavior = (pos, dir, dto) => {
   const pacDir = dto.pacman.dir;
   const pacPos = dto.pacman.pos;
+  const isPacOnPill = dto.pacman.powerPill;
 
   let target = pacPos;
-  if (pacDir) {
-    target = pacPos + pacDir.movement * 4;
-  }
+  if (pacDir) target = pacPos + pacDir.movement * 4;
 
-  if (
-    dto.objectExist(target, OBJECT_TYPE.WALL) ||
-    dto.objectExist(target, OBJECT_TYPE.GHOST)
-  ) {
-    target = pacPos;
-  }
+  if (isPacOnPill) return randomMovement(pos, dir, dto);
 
-  const path = findShortestPath(pos, target, dto);
-  if (path && path.length > 0) {
-    const moveTo = path[0];
+  const getPacman = findShortestPath(pos, target, dto);
+  if (getPacman && getPacman.length > 0) {
+    const moveTo = getPacman[0];
     const newDir = Object.values(DIRECTIONS).find(d => pos + d.movement === moveTo);
     return { nextMovePos: moveTo, direction: newDir || dir };
   }
@@ -158,12 +147,12 @@ export const pinkyBehavior = (pos, dir, dto) => {
  */
 export const inkyBehavior = (pos, dir, dto) => {
   const pacPos = dto.pacman.pos;
-  const BlinkyPos = dto.ghostContext.ghosts.find(g => g.name === 'blinky').pos;
+  const BlinkyPos = dto.ghostContext.ghosts.find(g => g.name === 'blinky')?.pos || 1;
   let target = ((pacPos + BlinkyPos) / 2).toFixed(0);
-  
-  const path = findShortestPath(pos, target, dto);
-    if (path && path.length > 0) {
-    const moveTo = path[0];
+
+  const getPacman = findShortestPath(pos, target, dto);
+    if (getPacman && getPacman.length > 0) {
+    const moveTo = getPacman[0];
     const newDir = Object.values(DIRECTIONS).find(d => pos + d.movement === moveTo);
     return { nextMovePos: moveTo, direction: newDir || dir };
   }
@@ -181,12 +170,13 @@ export const inkyBehavior = (pos, dir, dto) => {
 export const clydeBehavior = (pos, dir, dto) => {
   const pacPos = dto.pacman.pos;
   const shouldFollow = pacPos - pos > 8;
+  const isPacOnPill = dto.pacman.powerPill;
 
-  let target = shouldFollow ? target = pacPos : target = 22; // Move to the top left corner if not following
+  let target = shouldFollow || !isPacOnPill ? target = pacPos : target = 22; // Move to the top left corner if not following or pacman is on a power pill
 
-  const path = findShortestPath(pos, target, dto);
-  if (path && path.length > 0) {
-    const moveTo = path[0];
+  const getPacman = findShortestPath(pos, target, dto);
+  if (getPacman && getPacman.length > 0) {
+    const moveTo = getPacman[0];
     const newDir = Object.values(DIRECTIONS).find(d => pos + d.movement === moveTo);
     return { nextMovePos: moveTo, direction: newDir || dir };
   }
