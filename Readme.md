@@ -3,6 +3,7 @@
 ![Pacman Game Screenshot](./image.png)
 
 Um clássico jogo do Pacman desenvolvido com JavaScript puro, HTML e CSS. Este projeto recria a experiência nostálgica do arcade com fantasmas perseguindo e power-ups estratégicos.
+https://jogo-pacman-psi.vercel.app/
 
 ## ✨ Funcionalidades
 
