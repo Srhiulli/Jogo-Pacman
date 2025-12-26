@@ -105,7 +105,7 @@ export class GameContext {
     this.ghosts = ghosts;
   }
 
-  static createGameContext(gameBoard, ghost) {
+  static createGameContext(gameBoard) {
     const context = new GameContext(gameBoard);
     return context
   }
