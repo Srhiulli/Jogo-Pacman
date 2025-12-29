@@ -6,36 +6,52 @@ import { blinkyBehavior, pinkyBehavior, inkyBehavior, clydeBehavior } from './gh
 import { GameState } from './GameState';
 import { MainGameButton } from './MainGameButton';
 
+// Verificar se elementos existem
 const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
 const mainButton = document.querySelector('#main-button');
 
-const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
-const gameContext = GameContext.createGameContext(gameBoard);
+if (!gameGrid || !scoreTable || !mainButton) {
+    console.error('Elementos DOM não encontrados:', {
+        gameGrid: !!gameGrid,
+        scoreTable: !!scoreTable,
+        mainButton: !!mainButton
+    });
+    throw new Error('Elementos DOM necessários não foram encontrados');
+}
 
-const gameState = new GameState({
-    gameBoard,
-    gameContext,
-    mainButton,  
-    scoreTable,
-    LEVEL,
-    OBJECT_TYPE,
-    Pacman,
-    Ghost,
-    blinkyBehavior,
-    pinkyBehavior,
-    inkyBehavior,
-    clydeBehavior,
-    POWER_PILL_TIME: 10000,
-    GLOBAL_SPEED: 80
-});
+try {
+    const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
+    const gameContext = GameContext.createGameContext(gameBoard);
 
-const gameButton = new MainGameButton(mainButton, gameState);
+    const gameState = new GameState({
+        gameBoard,
+        gameContext,
+        mainButton,  
+        scoreTable,
+        LEVEL,
+        OBJECT_TYPE,
+        Pacman,
+        Ghost,
+        blinkyBehavior,
+        pinkyBehavior,
+        inkyBehavior,
+        clydeBehavior,
+        POWER_PILL_TIME: 10000,
+        GLOBAL_SPEED: 80
+    });
 
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const state = gameState.currentState.constructor.name;
-        if (state === 'PlayingState') gameState.pause();
-        else if (state === 'PausedState') gameState.start();
-    }
-});
+    const gameButton = new MainGameButton(mainButton, gameState);
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const state = gameState.currentState.constructor.name;
+            if (state === 'PlayingState') gameState.pause();
+            else if (state === 'PausedState') gameState.start();
+        }
+    });
+
+    console.log('Jogo inicializado com sucesso!');
+} catch (error) {
+    console.error('Erro ao inicializar o jogo:', error);
+}

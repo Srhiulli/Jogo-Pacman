@@ -13,8 +13,10 @@ export class MainGameButton {
         this.button.addEventListener('click', () => this.handleClick());
     }
     
-    handleClick() {
+handleClick() {
+    try {
         const state = this.gameState.currentState.constructor.name;
+        console.log('Estado atual:', state);
         
         switch(state) {
             case 'ReadyState':
@@ -28,7 +30,10 @@ export class MainGameButton {
                 this.gameState.start();
                 break;
         }
+    } catch (error) {
+        console.error('Erro ao lidar com clique:', error);
     }
+}
      
     onStateChange(state) {
         this.updateLabel(this.getLabelForState(state));
