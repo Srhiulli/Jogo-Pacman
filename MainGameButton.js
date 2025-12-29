@@ -29,7 +29,7 @@ export class MainGameButton {
                 break;
         }
     }
-    
+     
     onStateChange(state) {
         this.updateLabel(this.getLabelForState(state));
     }
