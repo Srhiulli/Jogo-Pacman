@@ -1,4 +1,5 @@
-//observer pattern to update button label based on game state
+import { GameStates } from './GameState';
+
 export class MainGameButton {
     constructor(buttonElement, gameState) {
         this.button = buttonElement;
@@ -13,27 +14,27 @@ export class MainGameButton {
         this.button.addEventListener('click', () => this.handleClick());
     }
     
-handleClick() {
-    try {
-        const state = this.gameState.currentState.constructor.name;
-        console.log('Estado atual:', state);
-        
-        switch(state) {
-            case 'ReadyState':
-            case 'GameOverState':
-                this.gameState.start();
-                break;
-            case 'PlayingState':
-                this.gameState.pause();
-                break;
-            case 'PausedState':
-                this.gameState.start();
-                break;
+    handleClick() {
+        try {
+            const state = this.gameState.currentStateName;
+            console.log('Estado atual:', state);
+            
+            switch(state) {
+                case GameStates.READY:
+                case GameStates.GAME_OVER:
+                    this.gameState.start();
+                    break;
+                case GameStates.PLAYING:
+                    this.gameState.pause();
+                    break;
+                case GameStates.PAUSED:
+                    this.gameState.start();
+                    break;
+            }
+        } catch (error) {
+            console.error('Erro ao lidar com clique:', error);
         }
-    } catch (error) {
-        console.error('Erro ao lidar com clique:', error);
     }
-}
      
     onStateChange(state) {
         this.updateLabel(this.getLabelForState(state));
@@ -41,10 +42,10 @@ handleClick() {
     
     getLabelForState(state) {
         const labels = {
-            'ReadyState': 'Start Game',
-            'PlayingState': 'Pause',
-            'PausedState': 'Resume',
-            'GameOverState': 'Play Again'
+            [GameStates.READY]: 'Start Game',
+            [GameStates.PLAYING]: 'Pause',
+            [GameStates.PAUSED]: 'Resume',
+            [GameStates.GAME_OVER]: 'Play Again'
         };
         return labels[state] || 'Start';
     }

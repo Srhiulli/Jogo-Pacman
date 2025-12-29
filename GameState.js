@@ -1,7 +1,14 @@
+export const GameStates = {
+    READY: 'READY',
+    PLAYING: 'PLAYING',
+    PAUSED: 'PAUSED',
+    GAME_OVER: 'GAME_OVER'
+};
 export class GameState {
     constructor(gameConfig) {
         this.gameConfig = gameConfig; 
         this.currentState = new ReadyState(this);
+        this.currentStateName = GameStates.READY;
         this.score = 0;
         this.pacman = null;
         this.ghosts = [];
@@ -17,9 +24,10 @@ export class GameState {
         this.observers.forEach(callback => callback(stateName));
     }
     
-    setState(state) {
+    setState(state, stateName) {
         this.currentState = state;
-        this.notify(state.constructor.name);
+        this.currentStateName = stateName;
+        this.notify(stateName);
     }
     updateButtonLabel(text) {
         this.gameConfig.mainButton.textContent = text;
