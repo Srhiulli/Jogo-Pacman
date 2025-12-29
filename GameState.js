@@ -7,10 +7,22 @@ export class GameState {
         this.ghosts = [];
         this.timer = null;
         this.powerPillTimer = null;
+        this.observers = [];
+    }
+    subscribe(callback) {
+        this.observers.push(callback);
+    }
+    
+    notify(stateName) {
+        this.observers.forEach(callback => callback(stateName));
     }
     
     setState(state) {
         this.currentState = state;
+        this.notify(state.constructor.name);
+    }
+    updateButtonLabel(text) {
+        this.gameConfig.mainButton.textContent = text;
     }
     
     start() { this.currentState.start(); }
@@ -37,7 +49,6 @@ class ReadyState {
         const config = gs.gameConfig;
         
         gs.resetGame();
-        config.startButton.classList.add('hide');
         config.gameBoard.createGrid(config.LEVEL);
         
         gs.pacman = new config.Pacman(2, 287);
@@ -68,6 +79,7 @@ class ReadyState {
 class PlayingState {
     constructor(gameState) {
         this.gameState = gameState;
+        this.gameState.updateButtonLabel('Pause');
     }
     
     start() { console.log('Already playing'); }
@@ -86,7 +98,7 @@ class PlayingState {
         
         config.gameBoard.removeObject(gs.pacman.pos, [config.OBJECT_TYPE.PACMAN]);
         config.gameBoard.showGameStatus(win);
-        config.startButton.classList.remove('hide');
+        this.gameState.updateButtonLabel('Start Game');
         
         this.gameState.setState(new GameOverState(this.gameState, win));
     }

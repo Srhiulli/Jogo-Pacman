@@ -51,8 +51,41 @@ body {
   font-size: 2rem;
 }
 
-#start-button {
+#main-button {
   margin-top: 20px;
+  padding: 15px 40px;
+  font-size: 1.2rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(145deg, #07194b, #072b65);
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+#main-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.6);
+}
+
+#main-button:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(59, 130, 246, 0.4);
+}
+
+#main-button.hide {
+  animation: fadeOut 0.3s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: scale(0.8);
+  }
 }
 
 .hide {

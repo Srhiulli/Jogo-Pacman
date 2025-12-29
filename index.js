@@ -4,10 +4,11 @@ import Pacman from './Pacman';
 import Ghost from './Ghosts';
 import { blinkyBehavior, pinkyBehavior, inkyBehavior, clydeBehavior } from './ghostBehaviors';
 import { GameState } from './GameState';
+import { MainGameButton } from './MainGameButton';
 
 const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
-const startButton = document.querySelector('#start-button');
+const mainButton = document.querySelector('#main-button');
 
 const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
 const gameContext = GameContext.createGameContext(gameBoard);
@@ -15,7 +16,7 @@ const gameContext = GameContext.createGameContext(gameBoard);
 const gameState = new GameState({
     gameBoard,
     gameContext,
-    startButton,
+    mainButton,  
     scoreTable,
     LEVEL,
     OBJECT_TYPE,
@@ -29,8 +30,12 @@ const gameState = new GameState({
     GLOBAL_SPEED: 80
 });
 
-startButton.addEventListener('click', () => gameState.start());
+const gameButton = new MainGameButton(mainButton, gameState);
 
 document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') gameState.pause();
+    if (e.key === 'Escape') {
+        const state = gameState.currentState.constructor.name;
+        if (state === 'PlayingState') gameState.pause();
+        else if (state === 'PausedState') gameState.start();
+    }
 });
