@@ -76,25 +76,22 @@ class ReadyState {
         
         gs.timer = setInterval(() => this.gameState.update(), config.GLOBAL_SPEED);
         
-        this.gameState.setState(new PlayingState(this.gameState));
+        this.gameState.setState(new PlayingState(this.gameState), GameStates.PLAYING);
+
+        this.gameState.updateButtonLabel('Pause');
     }
-    
-    pause() { console.log('Cannot pause - game not started'); }
-    gameOver() { console.log('Cannot game over - game not started'); }
-    update() { }
 }
 
 class PlayingState {
     constructor(gameState) {
         this.gameState = gameState;
+        this.gameState.currentStateName = GameStates.PLAYING;
         this.gameState.updateButtonLabel('Pause');
     }
     
-    start() { console.log('Already playing'); }
-    
     pause() {
         clearInterval(this.gameState.timer);
-        this.gameState.setState(new PausedState(this.gameState));
+        this.gameState.setState(new PausedState(this.gameState), GameStates.PAUSED);
     }
     
     gameOver(win) {
@@ -183,12 +180,8 @@ class PausedState {
             () => this.gameState.update(), 
             config.GLOBAL_SPEED
         );
-        this.gameState.setState(new PlayingState(this.gameState));
+        this.gameState.setState(new PlayingState(this.gameState), GameStates.PLAYING);
     }
-    
-    pause() { console.log('Already paused'); }
-    gameOver() { console.log('Cannot game over while paused'); }
-    update() { }
 }
 
 class GameOverState {
