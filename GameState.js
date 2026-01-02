@@ -15,6 +15,7 @@ export class GameState {
         this.timer = null;
         this.powerPillTimer = null;
         this.observers = [];
+        this.inputManager = gameConfig.inputManager;
     }
     subscribe(callback) {
         this.observers.push(callback);
@@ -40,6 +41,9 @@ export class GameState {
     
     resetGame() {
         this.score = 0;
+        if (this.pacman) {
+            this.inputManager.unregister(this.pacman);
+        }
         this.pacman = null;
         this.ghosts = [];
         if (this.timer) clearInterval(this.timer);
@@ -64,9 +68,11 @@ class ReadyState {
         
         const handleInput = (e) => 
             gs.pacman.handleKeyInput(e, config.gameBoard.objectExist.bind(config.gameBoard));
-        document.addEventListener('keydown', handleInput);
+            gs.inputManager.register(
+                gs.pacman,
+                config.gameBoard.objectExist.bind(config.gameBoard)
+             );  
         
-        // Criar Ghosts
         gs.ghosts = [
             new config.Ghost(5, 188, config.blinkyBehavior, config.OBJECT_TYPE.BLINKY),
             new config.Ghost(4, 209, config.pinkyBehavior, config.OBJECT_TYPE.PINKY),
@@ -100,10 +106,11 @@ class PlayingState {
         
         clearInterval(gs.timer);
         clearTimeout(gs.powerPillTimer);
+
+        gs.inputManager.unregister(gs.pacman);
         
         config.gameBoard.removeObject(gs.pacman.pos, [config.OBJECT_TYPE.PACMAN]);
         config.gameBoard.showGameStatus(win);
-        this.gameState.updateButtonLabel('Start Game');
         
         this.gameState.setState(new GameOverState(this.gameState, win));
     }

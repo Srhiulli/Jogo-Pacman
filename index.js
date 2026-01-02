@@ -3,8 +3,9 @@ import { GameBoard, GameContext } from './GameBoard';
 import Pacman from './Pacman';
 import Ghost from './Ghosts';
 import { blinkyBehavior, pinkyBehavior, inkyBehavior, clydeBehavior } from './ghostBehaviors';
-import { GameState } from './GameState';
+import { GameState, GameStates } from './GameState';
 import { MainGameButton } from './MainGameButton';
+import { InputManager } from './InputManager';
 
 // Verificar se elementos existem
 const gameGrid = document.querySelector('#game');
@@ -23,11 +24,13 @@ if (!gameGrid || !scoreTable || !mainButton) {
 try {
     const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL);
     const gameContext = GameContext.createGameContext(gameBoard);
+    const inputManager = new InputManager(); 
 
     const gameState = new GameState({
         gameBoard,
         gameContext,
-        mainButton,  
+        mainButton, 
+        inputManager,
         scoreTable,
         LEVEL,
         OBJECT_TYPE,
@@ -45,13 +48,12 @@ try {
 
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            const state = gameState.currentState.constructor.name;
-            if (state === 'PlayingState') gameState.pause();
-            else if (state === 'PausedState') gameState.start();
+            const state = gameState.currentStateName;
+            if (state === GameStates.PLAYING) gameState.pause();
+            else if (state === GameStates.PAUSED) gameState.start();
         }
     });
 
-    console.log('Jogo inicializado com sucesso!');
 } catch (error) {
     console.error('Erro ao inicializar o jogo:', error);
 }
