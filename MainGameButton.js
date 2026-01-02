@@ -17,7 +17,6 @@ export class MainGameButton {
     handleClick() {
         try {
             const state = this.gameState.currentStateName;
-            console.log('Estado atual:', state);
             
             switch(state) {
                 case GameStates.READY:

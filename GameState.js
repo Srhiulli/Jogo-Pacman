@@ -195,7 +195,5 @@ class GameOverState {
         this.gameState.start();
     }
     
-    pause() { console.log('Cannot pause - game is over'); }
-    gameOver() { console.log('Already game over'); }
     update() { }
 }
